@@ -1,0 +1,23 @@
+{
+  "name": "data.modeling",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "dgp-web",
+    "email": "dgb-web@outlook.de"
+  },
+  "keywords": [],
+  "scripts": {
+    "clean-dist": "rimraf dist/src dist/README.md",
+    "copy-assets-to-dist": "cpx README.md dist && cpx LICENSE dist",
+    "prebuild": "npm run clean-dist && npm run copy-assets-to-dist",
+    "build": "tsc --project tsconfig.json"
+  },
+  "dependencies": {},
+  "private": true,
+  "devDependencies": {
+    "cpx": "^1.5.0",
+    "rimraf": "^3.0.0",
+    "typescript": "^4"
+  }
+}
