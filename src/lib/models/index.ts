@@ -1,4 +1,6 @@
+export * from "./entity-management";
 export * from "./attribute-metadata.model";
+export * from "./attribute-metadata-map.model";
 export * from "./immutable.model";
 export * from "./key-value-store.model";
 export * from "./many.model";
