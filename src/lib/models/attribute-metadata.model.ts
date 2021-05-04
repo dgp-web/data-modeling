@@ -45,7 +45,7 @@ export interface UserEntities {
 }
 
 const userMetadata: ModelMetadata<User, UserEntities> = {
-    key: x => x.userId,
+    getKey: x => x.userId,
     attributes: {},
     relationships: {
         getPets: (entity, state) => entity.petIds.map(petId => state.pet.entities[petId]),

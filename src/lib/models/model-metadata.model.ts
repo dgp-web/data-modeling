@@ -11,7 +11,7 @@ export type AttributeMetadataMap<T, TEntityTypeMap extends EntityTypeMap> = {
 };
 
 export interface ModelMetadata<T extends TEntityTypeMap[keyof TEntityTypeMap], TEntityTypeMap extends EntityTypeMap> {
-    readonly key?: IdPropertyAccessor<T>;
+    readonly getKey?: IdPropertyAccessor<T>;
     readonly attributes?: AttributeMetadataMap<T, TEntityTypeMap>;
     readonly relationships?: RelationshipMap<T, TEntityTypeMap>;
 }
