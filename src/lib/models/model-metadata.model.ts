@@ -5,4 +5,9 @@ export interface ModelMetadata<T extends TEntityTypeMap[keyof TEntityTypeMap], T
     readonly id?: IdPropertyAccessor<T>;
     readonly attributes?: AttributeMetadataMap<T, TEntityTypeMap>;
     readonly relationships?: RelationshipMap<T, TEntityTypeMap>;
+
+    readonly label?: string;
+    readonly hint?: string;
+    readonly description?: string;
+    readonly icon?: string;
 }
