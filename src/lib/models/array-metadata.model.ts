@@ -5,7 +5,7 @@ export interface ArrayMetadata<TItem> {
     readonly hint?: string;
     readonly icon?: string;
     readonly item?: ResolvedMetadata<TItem>;
-    readonly defaultValue?: ReadonlyArray<TItem>;
+    readonly defaultValue?: Array<TItem>;
     readonly label?: string;
     readonly max?: number;
     readonly min?: number;
