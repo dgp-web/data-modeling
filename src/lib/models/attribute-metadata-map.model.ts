@@ -1,6 +1,6 @@
-import { EntityTypeMap } from "./entity-management";
-import { AttributeMetadata } from "./attribute-metadata.model";
+import {ResolvedMetadata} from "./resolved-metadata.model";
 
-export type AttributeMetadataMap<T, TEntityTypeMap extends EntityTypeMap> = {
-    [K in keyof T]?: AttributeMetadata<T[K]>
+export type AttributeMetadataMap<TModel> = {
+    readonly [TKey in keyof TModel]?: ResolvedMetadata<TModel[TKey]>;
 };
+
