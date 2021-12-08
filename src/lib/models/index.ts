@@ -8,4 +8,5 @@ export * from "./matrix.model";
 export * from "./model-metadata.model";
 export * from "./mutable.model";
 export * from "./one-or-many.model";
+export {AttributeMetadataOrMap} from "./attribute-metadata-or-map.model";
 

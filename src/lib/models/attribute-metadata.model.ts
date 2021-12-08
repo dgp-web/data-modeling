@@ -9,3 +9,4 @@ export interface AttributeMetadata<T = number, TScale = number> {
     readonly step?: TScale;
     readonly isSecret?: boolean;
 }
+
