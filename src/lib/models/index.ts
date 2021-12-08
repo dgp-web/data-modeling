@@ -1,3 +1,5 @@
+export * from "./any-array.model";
+export * from "./array-metadata.model";
 export * from "./entity-management";
 export * from "./attribute-metadata.model";
 export * from "./attribute-metadata-map.model";
