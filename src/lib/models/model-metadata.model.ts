@@ -10,4 +10,5 @@ export interface ModelMetadata<T extends TEntityTypeMap[keyof TEntityTypeMap], T
     readonly hint?: string;
     readonly description?: string;
     readonly icon?: string;
+    readonly isRequired?: boolean;
 }

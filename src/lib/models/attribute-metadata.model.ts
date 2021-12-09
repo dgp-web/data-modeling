@@ -8,5 +8,6 @@ export interface AttributeMetadata<T = number, TScale = number> {
     readonly max?: TScale;
     readonly step?: TScale;
     readonly isSecret?: boolean;
+    readonly isRequired?: boolean;
 }
 
