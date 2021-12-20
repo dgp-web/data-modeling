@@ -10,3 +10,19 @@ at design time.
 
 We like to think about ``data-modeling`` as experiences cast into flexible interfaces geared towards
 building sophisticated data-handling in application systems relying on TypeScript.
+
+## Features
+
+### Model metadata
+Tbd
+
+### Entity states
+Tbd
+
+### Common types
+Tbd
+
+## Roadmap
+
+### Mapping to [Ajv](https://ajv.js.org/) types
+Tbd
