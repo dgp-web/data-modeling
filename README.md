@@ -14,11 +14,15 @@ building sophisticated data-handling in application systems relying on TypeScrip
 ## Features
 
 ### Model metadata
+Tbd
 
 ### Entity states
+Tbd
 
 ### Common types
+Tbd
 
 ## Roadmap
 
 ### Mapping to [Ajv](https://ajv.js.org/) types
+Tbd
