@@ -44,6 +44,8 @@ display names, or allowed sizes of numbers and labels.
 Even relationships between models can be expressed.
 
 ````typescript
+import { ModelMetadata } from "data-modeling";
+
 export const userMetadata: ModelMetadata<User, Entities> = {
     id: x => x.userId.toString(),
     label: "User",
