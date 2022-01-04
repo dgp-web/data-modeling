@@ -13,8 +13,63 @@ building sophisticated data-handling in application systems relying on TypeScrip
 
 ## Features
 
+The following examples demonstrate the features of ``data-modeling`` and rely
+on a ``User`` and a ``Group`` to do so.
+
+````typescript
+export interface User {
+    userId: number;
+
+    groupId?: number;
+
+    label: string;
+    age?: number;
+}
+
+export interface Group {
+    groupId: number;
+}
+
+export interface Entities {
+    user: User;
+    group: Group;
+}
+````
+
 ### Model metadata
-Tbd
+
+Express additional information about models such as descriptions,
+display names, or allowed sizes of numbers and labels.
+
+Even relationships between models can be expressed.
+
+````typescript
+import { ModelMetadata } from "data-modeling";
+
+export const userMetadata: ModelMetadata<User, Entities> = {
+    id: x => x.userId.toString(),
+    label: "User",
+    description: "A user of the application",
+    attributes: {
+        label: {
+            label: "Name",
+            icon: "label",
+            min: 4,
+            max: 64,
+            required: true
+        },
+        age: {
+            label: "Age",
+            min: 0,
+            max: 120,
+            step: 1
+        }
+    },
+    relationships: {
+        toGroup: (user, state) => state.group.entities[user.groupId]
+    }
+};
+````
 
 ### Entity states
 Tbd
