@@ -51,6 +51,7 @@ export const userMetadata: ModelMetadata<User, Entities> = {
     attributes: {
         label: {
             label: "Name",
+            icon: "label",
             min: 4,
             max: 64,
             required: true
