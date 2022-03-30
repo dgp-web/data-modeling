@@ -10,4 +10,5 @@ export * from "./matrix.model";
 export * from "./model-metadata.model";
 export * from "./mutable.model";
 export * from "./one-or-many.model";
+export {ReadonlyDate} from "./readonly-date.model";
 
