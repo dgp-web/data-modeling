@@ -19,3 +19,6 @@ const mutableInstance: MutableModal = {
     createdAt: new Date(),
     list: []
 };
+
+
+immutableInstance.list.sort();

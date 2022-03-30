@@ -1,4 +1,4 @@
 /**
  * @tsoaModel
  */
-export type Many<TModel> = ReadonlyArray<TModel>;
+export type Many<TModel> = ReadonlyArray<TModel> & Pick<Array<TModel>, "sort">;
