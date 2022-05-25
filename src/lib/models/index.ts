@@ -1,3 +1,4 @@
+export * from "./validation";
 export * from "./any-array.model";
 export * from "./array-metadata.model";
 export * from "./entity-management";
