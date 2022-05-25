@@ -75,7 +75,12 @@ export const userMetadata: ModelMetadata<User, Entities> = {
 Tbd
 
 ### Common types
-Tbd
+Utilities for working with collections and handling mutability.
+````typescript
+import { Immutable, KVS, Many, Matrix, Mutable, OneOrMany } from "data-modeling";
+
+
+````
 
 ## Roadmap
 
