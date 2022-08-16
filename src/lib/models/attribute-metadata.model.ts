@@ -2,6 +2,7 @@ import { CommonType } from "./common-type.model";
 
 export interface AttributeMetadata<T = number, TScale = number> {
     readonly label?: string;
+    readonly placeholder?: string;
     readonly hint?: string;
     readonly description?: string;
     readonly icon?: string;
