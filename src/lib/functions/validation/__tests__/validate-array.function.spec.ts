@@ -1,9 +1,8 @@
-
-import { validateArray, validateArrayConfig } from "../validate-array.function";
 import { createMissingAttributeValueError } from "../create-missing-attribute-value-error.function";
 import { createMinViolationError } from "../create-min-violation-error.function";
 import { createMaxViolationError } from "../create-max-violation-error.function";
-import {ArrayMetadata, ModelValidationResult} from "../../../models";
+import { ArrayMetadata, ModelValidationResult } from "../../../models";
+import { validateArray, validateArrayConfig } from "../validate-model.function";
 
 describe("validateArray", () => {
 

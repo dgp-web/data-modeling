@@ -1,8 +1,8 @@
-import {validateAttribute} from "../validate-attribute.function";
-import {createMissingAttributeValueError} from "../create-missing-attribute-value-error.function";
-import {createMinViolationError} from "../create-min-violation-error.function";
-import {createMaxViolationError} from "../create-max-violation-error.function";
-import {ModelValidationResult} from "../../../models";
+import { createMissingAttributeValueError } from "../create-missing-attribute-value-error.function";
+import { createMinViolationError } from "../create-min-violation-error.function";
+import { createMaxViolationError } from "../create-max-violation-error.function";
+import { ModelValidationResult } from "../../../models";
+import { validateAttribute } from "../validate-model.function";
 
 describe("validateAttribute", () => {
 
