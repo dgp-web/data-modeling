@@ -14,4 +14,5 @@ export * from "./one-or-many.model";
 export { ReadonlyDate } from "./readonly-date.model";
 export { CommonTypeMap } from "./common-type-map.model";
 export { CommonType } from "./common-type.model";
+export { CurrentSelection } from "./current-selection.model";
 
