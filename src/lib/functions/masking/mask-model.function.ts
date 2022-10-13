@@ -41,7 +41,7 @@ export function maskModel<TModel>(
 
     return Object.keys(model).reduce((result, attributeKey) => {
 
-        const resolvedMetadata = metadata.attributes[attributeKey] as { isRequired?: boolean; };
+        const resolvedMetadata = metadata.attributes ? metadata.attributes[attributeKey] : undefined as { isRequired?: boolean; };
         let attributeValue;
 
         if (Array.isArray(model[attributeKey])) {
