@@ -7,3 +7,4 @@ export interface CommonTypeMap {
     readonly function: Function;
     readonly void: void;
 }
+
