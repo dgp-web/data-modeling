@@ -27,4 +27,20 @@ describe("maskAttribute", () => {
         expect(result).toBe(password);
     });
 
+    it(`should return the passed value no metadata are passed`, () => {
+        const result = maskAttribute({
+            value: password
+        });
+
+        expect(result).toBe(password);
+    });
+
+    it(`should proxy null or undefined`, () => {
+        const result = maskAttribute({
+            value: null
+        });
+
+        expect(result).toBeNull();
+    });
+
 });
