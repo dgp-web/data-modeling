@@ -28,35 +28,29 @@ export function maskModel<TModel>(
     payload: {
         readonly model: TModel;
         readonly attributePath?: string;
-        readonly modelMetadata?: ModelMetadata<TModel>;
-        readonly modelId: string;
-        readonly modelType: string;
+        readonly modelMetadata?: ModelMetadata<TModel>
     },
     config = maskModelConfig
 ): TModel {
 
     const model = payload.model;
     const metadata = payload.modelMetadata;
-    const modelId = payload.modelId;
-    const modelType = payload.modelType;
-    const rootAttributePath = payload.attributePath || "";
 
     if (isNullOrUndefined(model)) return model;
     if (isNullOrUndefined(metadata)) return model;
 
     return Object.keys(model).reduce((result, attributeKey) => {
 
-        const attributePath = rootAttributePath ? rootAttributePath + "." + attributeKey : attributeKey;
         const resolvedMetadata = metadata.attributes[attributeKey] as { isRequired?: boolean; };
         let attributeValue;
 
         if (Array.isArray(model[attributeKey])) {
             attributeValue = config.maskArray({
-                array: model[attributeKey], attributePath, arrayMetadata: resolvedMetadata, modelId, modelType
+                array: model[attributeKey], arrayMetadata: resolvedMetadata
             }, config);
         } else if (typeof model[attributeKey] === "object") {
             attributeValue = config.maskModel({
-                model: model[attributeKey], attributePath, modelMetadata: resolvedMetadata, modelId, modelType
+                model: model[attributeKey], modelMetadata: resolvedMetadata
             }, config);
         } else {
             attributeValue = config.maskAttribute({
@@ -82,37 +76,26 @@ export function maskArray<TArray extends any[]>(
         readonly array: TArray;
         readonly attributePath?: string;
         readonly arrayMetadata?: ArrayMetadata<TArray[0]>;
-        readonly modelId: string;
-        readonly modelType: string;
     },
     config = maskArrayConfig
 ): TArray {
 
     const value = payload.array;
     const metadata = payload.arrayMetadata;
-    const attributePath = payload.attributePath || "";
-    const modelId = payload.modelId;
-    const modelType = payload.modelType;
 
     if (isNullOrUndefined(value)) return value;
     if (isNullOrUndefined(metadata)) return value;
 
-    return value.map((item, index) => {
-        const childAttributePath = attributePath + "." + index;
-
+    return value.map(item => {
         if (Array.isArray(item)) {
             return config.maskArray({
                 array: item,
-                attributePath: childAttributePath,
-                arrayMetadata: metadata.item,
-                modelId, modelType
+                arrayMetadata: metadata.item
             }, config);
         } else if (typeof item === "object") {
             return config.maskModel({
                 model: item,
-                attributePath: childAttributePath,
-                modelMetadata: metadata.item,
-                modelId, modelType
+                modelMetadata: metadata.item
             }, config);
         } else {
             return config.maskAttribute({
