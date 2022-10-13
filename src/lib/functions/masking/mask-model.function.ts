@@ -4,10 +4,7 @@ import { maskSecretAttribute } from "./mask-secret-attribute.function";
 
 export function maskAttribute<TValue>(payload: {
     readonly value: TValue;
-    readonly attributePath: string;
     readonly attributeMetadata?: AttributeMetadata<TValue>;
-    readonly modelId: string;
-    readonly modelType: string;
 }): TValue {
 
     const value = payload.value;
@@ -63,7 +60,7 @@ export function maskModel<TModel>(
             }, config);
         } else {
             attributeValue = config.maskAttribute({
-                value: model[attributeKey], attributePath, attributeMetadata: resolvedMetadata, modelId, modelType
+                value: model[attributeKey], attributeMetadata: resolvedMetadata
             });
         }
 
@@ -120,9 +117,7 @@ export function maskArray<TArray extends any[]>(
         } else {
             return config.maskAttribute({
                 value: item,
-                attributePath: childAttributePath,
-                attributeMetadata: metadata.item,
-                modelId, modelType
+                attributeMetadata: metadata.item
             });
         }
     }) as TArray;
