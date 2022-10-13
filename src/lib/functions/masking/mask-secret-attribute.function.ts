@@ -22,7 +22,7 @@ export function maskAttribute<TValue>(payload: {
     const modelId = payload.modelId;
     const modelType = payload.modelType;
 
-    if (isNullOrUndefined(metadata)) return {isValid: true};
+    if (isNullOrUndefined(metadata)) return value;
 
     const result = createEmptyModelValidationResult();
 
@@ -84,7 +84,7 @@ export function maskModel<TModel>(
     const modelType = payload.modelType;
     const rootAttributePath = payload.attributePath || "";
 
-    if (isNullOrUndefined(metadata)) return {isValid: true};
+    if (isNullOrUndefined(metadata)) return model;
 
     const result = createEmptyModelValidationResult();
 
@@ -168,69 +168,34 @@ export function maskArray<TArray extends any[]>(
     const modelId = payload.modelId;
     const modelType = payload.modelType;
 
-    if (isNullOrUndefined(metadata)) return {isValid: true};
+    if (isNullOrUndefined(value)) return value;
+    if (isNullOrUndefined(metadata)) return value;
 
-    const result = createEmptyModelValidationResult();
+    return value.map((item, index) => {
+        const childAttributePath = attributePath + "." + index;
 
-    if (isNullOrUndefined(value)) {
-        if (metadata.isRequired) {
-            result.isValid = false;
-            result.errors.push(createMissingAttributeValueError({
-                value, attributePath, modelId, modelType
-            }));
+        if (Array.isArray(item)) {
+            return config.maskArray({
+                array: item,
+                attributePath: childAttributePath,
+                arrayMetadata: metadata.item,
+                modelId, modelType
+            }, config);
+        } else if (typeof item === "object") {
+            return config.maskModel({
+                model: item,
+                attributePath: childAttributePath,
+                modelMetadata: metadata.item,
+                modelId, modelType
+            }, config);
+        } else {
+            return config.maskAttribute({
+                value: item,
+                attributePath: childAttributePath,
+                attributeMetadata: metadata.item,
+                modelId, modelType
+            });
         }
-    } else {
-        if (notNullOrUndefined(metadata.max) && value.length > metadata.max) {
-            result.isValid = false;
-            result.errors.push(createMaxViolationError({
-                value: value.length, max: metadata.max, attributePath, modelId, modelType
-            }));
-        }
-
-        if (notNullOrUndefined(metadata.min) && value.length < metadata.min) {
-            result.isValid = false;
-            result.errors.push(createMinViolationError({
-                value: value.length, min: metadata.min, attributePath, modelId, modelType
-            }));
-        }
-
-        value.forEach((item, index) => {
-            const childAttributePath = attributePath + "." + index;
-            let r: ModelValidationResult;
-
-            if (Array.isArray(item)) {
-                r = config.maskArray({
-                    array: item,
-                    attributePath: childAttributePath,
-                    arrayMetadata: metadata.item,
-                    modelId, modelType
-                }, config);
-            } else if (typeof item === "object") {
-                r = config.maskModel({
-                    model: item,
-                    attributePath: childAttributePath,
-                    modelMetadata: metadata.item,
-                    modelId, modelType
-                }, config);
-            } else {
-                r = config.maskAttribute({
-                    value: item,
-                    attributePath: childAttributePath,
-                    attributeMetadata: metadata.item,
-                    modelId, modelType
-                });
-            }
-
-            if (!r.isValid) {
-                result.isValid = false;
-                result.errors = result.errors.concat(r.errors);
-            }
-        });
-
-    }
-
-    if (result.isValid) delete result.errors;
-
-    return result;
+    }) as TArray;
 
 }

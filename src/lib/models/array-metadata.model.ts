@@ -10,4 +10,5 @@ export interface ArrayMetadata<TItem> {
     readonly max?: number;
     readonly min?: number;
     readonly isRequired?: boolean;
+    readonly secret?: boolean;
 }
