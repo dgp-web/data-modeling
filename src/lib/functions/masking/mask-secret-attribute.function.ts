@@ -84,65 +84,34 @@ export function maskModel<TModel>(
     const modelType = payload.modelType;
     const rootAttributePath = payload.attributePath || "";
 
+    if (isNullOrUndefined(model)) return model;
     if (isNullOrUndefined(metadata)) return model;
 
-    const result = createEmptyModelValidationResult();
+    return Object.keys(model).reduce((result, attributeKey) => {
 
-    if (isNullOrUndefined(model)) {
-        if (metadata.isRequired) {
-            result.isValid = false;
-            result.errors.push(createMissingAttributeValueError({
-                value: model, attributePath: rootAttributePath, modelId, modelType
-            }));
-        }
-    }
-
-    if (isNullOrUndefined(metadata.attributes)) {
-        if (result.isValid) delete result.errors;
-        return result;
-    }
-
-    Object.keys(metadata.attributes).forEach(attributeKey => {
-
-        const resolvedMetadata = metadata.attributes[attributeKey] as { isRequired?: boolean; };
         const attributePath = rootAttributePath ? rootAttributePath + "." + attributeKey : attributeKey;
+        const resolvedMetadata = metadata.attributes[attributeKey] as { isRequired?: boolean; };
+        let attributeValue;
 
-        if (isNullOrUndefined(model[attributeKey])) {
-            if (resolvedMetadata.isRequired) {
-                result.isValid = false;
-                result.errors.push(createMissingAttributeValueError({
-                    value: model[attributeKey], attributePath, modelId, modelType
-                }));
-            }
+        if (Array.isArray(model[attributeKey])) {
+            attributeValue = config.maskArray({
+                array: model[attributeKey], attributePath, arrayMetadata: resolvedMetadata, modelId, modelType
+            }, config);
+        } else if (typeof model[attributeKey] === "object") {
+            attributeValue = config.maskModel({
+                model: model[attributeKey], attributePath, modelMetadata: resolvedMetadata, modelId, modelType
+            }, config);
         } else {
-            let r: ModelValidationResult;
-
-            if (Array.isArray(model[attributeKey])) {
-                r = config.maskArray({
-                    array: model[attributeKey], attributePath, arrayMetadata: resolvedMetadata, modelId, modelType
-                }, config);
-            } else if (typeof model[attributeKey] === "object") {
-                r = config.maskModel({
-                    model: model[attributeKey], attributePath, modelMetadata: resolvedMetadata, modelId, modelType
-                }, config);
-            } else {
-                r = config.maskAttribute({
-                    value: model[attributeKey], attributePath, attributeMetadata: resolvedMetadata, modelId, modelType
-                });
-            }
-
-            if (!r.isValid) {
-                result.isValid = false;
-                result.errors = result.errors.concat(r.errors);
-            }
-
+            attributeValue = config.maskAttribute({
+                value: model[attributeKey], attributePath, attributeMetadata: resolvedMetadata, modelId, modelType
+            });
         }
 
-    });
+        result[attributeKey] = attributeValue;
 
-    if (result.isValid) delete result.errors;
+        return result;
 
-    return result;
+    }, {} as Partial<TModel>) as TModel;
 }
 
 export const maskArrayConfig = {
