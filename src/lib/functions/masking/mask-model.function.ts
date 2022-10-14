@@ -27,7 +27,6 @@ export const maskModelConfig = {
 export function maskModel<TModel>(
     payload: {
         readonly model: TModel;
-        readonly attributePath?: string;
         readonly modelMetadata?: ModelMetadata<TModel>;
     },
     config = maskModelConfig
@@ -74,7 +73,6 @@ export const maskArrayConfig = {
 export function maskArray<TArray extends any[]>(
     payload: {
         readonly array: TArray;
-        readonly attributePath?: string;
         readonly arrayMetadata?: ArrayMetadata<TArray[0]>;
     },
     config = maskArrayConfig
