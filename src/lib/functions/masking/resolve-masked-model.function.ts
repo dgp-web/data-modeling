@@ -1,4 +1,4 @@
-import { AttributeMetadata, Secret } from "../../models";
+import { ArrayMetadata, AttributeMetadata, ModelMetadata, Secret } from "../../models";
 import { isNullOrUndefined } from "../validation/is-null-or-undefined.function";
 
 export function resolveMaskedAttribute<TValue>(payload: {
@@ -21,10 +21,38 @@ export function resolveMaskedAttribute<TValue>(payload: {
 
 }
 
-export function resolveMaskedModel() {
+export const resolvedMaskedModelConfig = {
+    resolveMaskedAttribute,
+    resolveMaskedModel,
+    resolveMaskedArray
+};
+
+export function resolveMaskedModel<TModel>(
+    payload: {
+        readonly model: TModel;
+        readonly referenceModel?: TModel;
+        readonly attributePath?: string;
+        readonly modelMetadata?: ModelMetadata<TModel>;
+    },
+    config = resolvedMaskedModelConfig
+): TModel {
 
 }
 
-export function resolveMaskedArray() {
+export const resolvedMaskedArrayConfig = {
+    resolveMaskedAttribute,
+    resolveMaskedModel,
+    resolveMaskedArray
+};
+
+export function resolveMaskedArray<TArray extends any[]>(
+    payload: {
+        readonly array: TArray;
+        readonly referenceArray?: TArray;
+        readonly attributePath?: string;
+        readonly arrayMetadata?: ArrayMetadata<TArray[0]>;
+    },
+    config = resolvedMaskedArrayConfig
+): TArray {
 
 }
