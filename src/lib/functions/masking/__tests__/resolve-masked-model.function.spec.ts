@@ -1,5 +1,6 @@
 import { resolvedMaskedModelConfig, resolveMaskedModel } from "../resolve-masked-model.function";
 import { ModelMetadata } from "../../../models";
+import { maskModel } from "../mask-model.function";
 
 describe("resolveMaskedModel", () => {
 
@@ -78,6 +79,57 @@ describe("resolveMaskedModel", () => {
             referenceModel: modelWithNested.nested,
             modelMetadata: undefined
         }, resolvedMaskedModelConfig);
+    });
+
+    it(`should be the counter operation to maskModel`, () => {
+        const referenceModel = {
+            shouldBeSecret: "1234",
+            regular: "regular",
+            items: [{
+                shouldBeSecret: "5678",
+                regular: "regular"
+            }],
+            nested: {
+                shouldBeSecret: "90",
+                regular: "regular"
+            }
+        };
+        const modelMetadata: ModelMetadata<typeof referenceModel> = {
+            attributes: {
+                shouldBeSecret: {
+                    isSecret: true
+                },
+                items: {
+                    item: {
+                        attributes: {
+                            shouldBeSecret: {
+                                isSecret: true
+                            }
+                        }
+                    }
+                },
+                nested: {
+                    attributes: {
+                        shouldBeSecret: {
+                            isSecret: true
+                        }
+                    }
+                }
+            }
+        };
+
+        const model = maskModel({
+            model: referenceModel,
+            modelMetadata
+        });
+
+        const result = resolveMaskedModel({
+            model,
+            referenceModel,
+            modelMetadata
+        });
+
+        expect(result).toEqual(referenceModel);
     });
 
 });

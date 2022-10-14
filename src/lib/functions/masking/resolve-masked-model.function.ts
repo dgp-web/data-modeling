@@ -52,13 +52,13 @@ export function resolveMaskedModel<TModel>(
         if (Array.isArray(model[attributeKey])) {
             attributeValue = config.resolveMaskedArray({
                 array: model[attributeKey],
-                referenceArray: model[attributeKey],
+                referenceArray: referenceModel[attributeKey],
                 arrayMetadata: resolvedMetadata
             }, config);
         } else if (typeof model[attributeKey] === "object") {
             attributeValue = config.resolveMaskedModel({
                 model: model[attributeKey],
-                referenceModel: model[attributeKey],
+                referenceModel: referenceModel[attributeKey],
                 modelMetadata: resolvedMetadata
             }, config);
         } else {
