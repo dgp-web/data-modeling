@@ -44,24 +44,40 @@ describe("resolveMaskedModel", () => {
         });
     });
 
-    xit(`should call resolveMaskedArray for included arrays`, () => {
+    it(`should call resolveMaskedArray for included arrays`, () => {
         spyOn(resolvedMaskedModelConfig, "resolveMaskedArray").and.callThrough();
-        const modelMetadata: ModelMetadata<typeof model> = {};
+        const modelWithArray = {
+            items: [model]
+        };
+        const modelMetadata: ModelMetadata<typeof modelWithArray> = {};
         resolveMaskedModel({
-            model,
-            referenceModel: model,
+            model: modelWithArray,
+            referenceModel: modelWithArray,
             modelMetadata
         });
+        expect(resolvedMaskedModelConfig.resolveMaskedArray).toHaveBeenCalledWith({
+            array: modelWithArray.items,
+            referenceArray: modelWithArray.items,
+            arrayMetadata: undefined
+        }, resolvedMaskedModelConfig);
     });
 
-    xit(`should call resolveMaskedModel for included models`, () => {
+    it(`should call resolveMaskedModel for included models`, () => {
         spyOn(resolvedMaskedModelConfig, "resolveMaskedModel").and.callThrough();
-        const modelMetadata: ModelMetadata<typeof model> = {};
+        const modelWithNested = {
+            nested: model
+        };
+        const modelMetadata: ModelMetadata<typeof modelWithNested> = {};
         resolveMaskedModel({
-            model,
-            referenceModel: model,
+            model: modelWithNested,
+            referenceModel: modelWithNested,
             modelMetadata
         });
+        expect(resolvedMaskedModelConfig.resolveMaskedModel).toHaveBeenCalledWith({
+            model: modelWithNested.nested,
+            referenceModel: modelWithNested.nested,
+            modelMetadata: undefined
+        }, resolvedMaskedModelConfig);
     });
 
 });
