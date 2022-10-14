@@ -51,15 +51,21 @@ export function resolveMaskedModel<TModel>(
 
         if (Array.isArray(model[attributeKey])) {
             attributeValue = config.resolveMaskedArray({
-                array: model[attributeKey], arrayMetadata: resolvedMetadata
+                array: model[attributeKey],
+                referenceArray: model[attributeKey],
+                arrayMetadata: resolvedMetadata
             }, config);
         } else if (typeof model[attributeKey] === "object") {
             attributeValue = config.resolveMaskedModel({
-                model: model[attributeKey], modelMetadata: resolvedMetadata
+                model: model[attributeKey],
+                referenceModel: model[attributeKey],
+                modelMetadata: resolvedMetadata
             }, config);
         } else {
             attributeValue = config.resolveMaskedAttribute({
-                value: model[attributeKey], attributeMetadata: resolvedMetadata
+                value: model[attributeKey],
+                referenceValue: referenceModel[attributeKey],
+                attributeMetadata: resolvedMetadata
             });
         }
 
@@ -94,20 +100,23 @@ export function resolveMaskedArray<TArray extends any[]>(
     if (isNullOrUndefined(referenceArray)) return array as TArray;
     if (isNullOrUndefined(arrayMetadata)) return array as TArray;
 
-    return array.map(item => {
+    return array.map((item, index) => {
         if (Array.isArray(item)) {
             return config.resolveMaskedArray({
                 array: item,
+                referenceArray: referenceArray[index],
                 arrayMetadata: arrayMetadata.item
             }, config);
         } else if (typeof item === "object") {
             return config.resolveMaskedModel({
                 model: item,
+                referenceModel: referenceArray[index],
                 modelMetadata: arrayMetadata.item
             }, config);
         } else {
             return config.resolveMaskedAttribute({
                 value: item,
+                referenceValue: referenceArray[index],
                 attributeMetadata: arrayMetadata.item
             });
         }
