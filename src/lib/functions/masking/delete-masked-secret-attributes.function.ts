@@ -2,11 +2,11 @@ import { ArrayMetadata, ModelMetadata } from "../../models";
 import { isNullOrUndefined } from "../validation/is-null-or-undefined.function";
 
 export const deleteSecretAttributesConfig = {
-    deleteSecretAttributesFromArray,
-    deleteSecretAttributes
+    deleteMaskedSecretAttributesFromArray,
+    deleteMaskedSecretAttributes
 };
 
-export function deleteSecretAttributes<TModel>(
+export function deleteMaskedSecretAttributes<TModel>(
     payload: {
         readonly model: TModel;
         readonly modelMetadata?: ModelMetadata<TModel>;
@@ -24,16 +24,16 @@ export function deleteSecretAttributes<TModel>(
 
         const resolvedMetadata = metadata.attributes ? metadata.attributes[attributeKey] : undefined as { isRequired?: boolean; isSecret?: boolean; };
 
-        if (resolvedMetadata && resolvedMetadata.isSecret) return result;
+        let attributeValue = model[attributeKey];
 
-        let attributeValue;
+        if (resolvedMetadata && resolvedMetadata.isSecret && (attributeValue === "<secret>" || attributeValue === "<missing-secret>")) return result;
 
         if (Array.isArray(model[attributeKey])) {
-            attributeValue = config.deleteSecretAttributesFromArray({
+            attributeValue = config.deleteMaskedSecretAttributesFromArray({
                 array: model[attributeKey], arrayMetadata: resolvedMetadata
             }, config);
         } else if (typeof model[attributeKey] === "object") {
-            attributeValue = config.deleteSecretAttributes({
+            attributeValue = config.deleteMaskedSecretAttributes({
                 model: model[attributeKey], modelMetadata: resolvedMetadata
             }, config);
         } else {
@@ -48,11 +48,11 @@ export function deleteSecretAttributes<TModel>(
 }
 
 export const deleteMaskedAttributesFromArrayConfig = {
-    deleteSecretAttributesFromArray,
-    deleteSecretAttributes
+    deleteMaskedSecretAttributesFromArray,
+    deleteMaskedSecretAttributes
 };
 
-export function deleteSecretAttributesFromArray<TArray extends any[]>(
+export function deleteMaskedSecretAttributesFromArray<TArray extends any[]>(
     payload: {
         readonly array: TArray;
         readonly arrayMetadata?: ArrayMetadata<TArray[0]>;
@@ -68,12 +68,12 @@ export function deleteSecretAttributesFromArray<TArray extends any[]>(
 
     return value.map(item => {
         if (Array.isArray(item)) {
-            return config.deleteSecretAttributesFromArray({
+            return config.deleteMaskedSecretAttributesFromArray({
                 array: item,
                 arrayMetadata: metadata.item
             }, config);
         } else if (typeof item === "object") {
-            return config.deleteSecretAttributes({
+            return config.deleteMaskedSecretAttributes({
                 model: item,
                 modelMetadata: metadata.item
             }, config);

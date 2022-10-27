@@ -1,15 +1,15 @@
 import { ModelMetadata } from "../../../models";
-import { deleteSecretAttributes } from "../delete-masked-attributes.function";
+import { deleteMaskedSecretAttributes } from "../delete-masked-secret-attributes.function";
 
-describe("deleteSecretAttributes", () => {
+describe("deleteMaskedSecretAttributes", () => {
 
     it(`should leave out secret attributes in the passed model`, () => {
 
         const model = {
-            shouldBeSecret: "1234",
+            shouldBeSecret: "<secret>",
             regular: "regular",
             items: [{
-                shouldBeSecret: "5678",
+                shouldBeSecret: "<missing-secret>",
                 regular: "regular"
             }],
             nested: {
@@ -42,7 +42,7 @@ describe("deleteSecretAttributes", () => {
             }
         };
 
-        const result = deleteSecretAttributes({
+        const result = deleteMaskedSecretAttributes({
             model,
             modelMetadata
         });
@@ -53,6 +53,7 @@ describe("deleteSecretAttributes", () => {
                 regular: "regular"
             }],
             nested: {
+                shouldBeSecret: "90",
                 regular: "regular"
             }
         };
