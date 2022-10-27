@@ -1,7 +1,7 @@
 import { ArrayMetadata, ModelMetadata } from "../../models";
 import { isNullOrUndefined } from "../validation/is-null-or-undefined.function";
 
-export const deleteMaskedAttributesFromModelConfig = {
+export const deleteSecretAttributesConfig = {
     deleteSecretAttributesFromArray,
     deleteSecretAttributes
 };
@@ -11,7 +11,7 @@ export function deleteSecretAttributes<TModel>(
         readonly model: TModel;
         readonly modelMetadata?: ModelMetadata<TModel>;
     },
-    config = deleteMaskedAttributesFromModelConfig
+    config = deleteSecretAttributesConfig
 ): TModel {
 
     const model = payload.model;
@@ -24,7 +24,7 @@ export function deleteSecretAttributes<TModel>(
 
         const resolvedMetadata = metadata.attributes ? metadata.attributes[attributeKey] : undefined as { isRequired?: boolean; isSecret?: boolean; };
 
-        if (resolvedMetadata.isSecret) return result;
+        if (resolvedMetadata && resolvedMetadata.isSecret) return result;
 
         let attributeValue;
 
