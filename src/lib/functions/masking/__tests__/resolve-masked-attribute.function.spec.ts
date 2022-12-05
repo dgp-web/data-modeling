@@ -58,4 +58,16 @@ describe("resolveMaskedAttribute", () => {
         expect(result).toBe(value);
     });
 
+    it(`should return "<missing-secret>" if the passed value is "<secret>" and referenceValue is unset `, () => {
+        const attributeMetadata: AttributeMetadata<string> = {
+            isSecret: true
+        };
+        const result = resolveMaskedAttribute({
+            value: "<secret>",
+            referenceValue: null,
+            attributeMetadata
+        });
+        expect(result).toBe("<missing-secret>");
+    });
+
 });

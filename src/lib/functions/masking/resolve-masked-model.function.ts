@@ -12,10 +12,10 @@ export function resolveMaskedAttribute<TValue>(payload: {
     const attributeMetadata = payload.attributeMetadata;
 
     if (isNullOrUndefined(value)) return value as TValue;
-    if (isNullOrUndefined(referenceValue)) return value as TValue;
     if (isNullOrUndefined(attributeMetadata)) return value as TValue;
     if (!attributeMetadata.isSecret) return value as TValue;
     if (value !== "<secret>") return value as TValue;
+    if (value === "<secret>" && isNullOrUndefined(referenceValue)) return "<missing-secret>" as any;
 
     return referenceValue;
 
