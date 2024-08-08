@@ -5,6 +5,7 @@ import { createEmptyModelValidationResult } from "./create-empty-model-validatio
 import { notNullOrUndefined } from "./not-null-or-undefined.function";
 import { createMaxViolationError } from "./create-max-violation-error.function";
 import { createMinViolationError } from "./create-min-violation-error.function";
+import { createPatternNotMatchedError } from "./validate-attribute.function";
 
 export function validateAttribute<TValue>(payload: {
     readonly value: TValue;
@@ -52,6 +53,22 @@ export function validateAttribute<TValue>(payload: {
             }));
         }
 
+    }
+
+    if (typeof value === "string") {
+        if (notNullOrUndefined(metadata.pattern)) {
+            const matchesPattern = metadata.pattern.test(value);
+            if (!matchesPattern) {
+                result.isValid = false;
+                result.errors.push(createPatternNotMatchedError({
+                    value,
+                    pattern: metadata.pattern,
+                    attributePath,
+                    modelId,
+                    modelType
+                }));
+            }
+        }
     }
 
     if (result.isValid) delete result.errors;
