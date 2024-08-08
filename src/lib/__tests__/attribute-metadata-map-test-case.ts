@@ -1,4 +1,4 @@
-import {AttributeMetadataMap} from "../models/attribute-metadata-map.model";
+import { AttributeMetadataMap } from "../models/attribute-metadata-map.model";
 
 export interface Nested {
     readonly sub: number;
@@ -11,14 +11,12 @@ export interface TestModel {
     readonly stringArray: string[];
 }
 
-const testModelMetadata: AttributeMetadataMap<TestModel> = {
+export const testModelMetadata: AttributeMetadataMap<TestModel> = {
     label: {
-
+        pattern: /asd/
     },
     nested: {
-        attributes: {
-
-        }
+        attributes: {}
     },
     nestedArray: {
         item: {
@@ -28,8 +26,6 @@ const testModelMetadata: AttributeMetadataMap<TestModel> = {
         }
     },
     stringArray: {
-        item: {
-
-        }
+        item: {}
     }
 }
