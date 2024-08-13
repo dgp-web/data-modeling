@@ -71,6 +71,16 @@ export function validateAttribute<TValue>(payload: {
         }
     }
 
+    if (notNullOrUndefined(metadata.additionalValidation)) {
+        const additionalValidationResult = metadata.additionalValidation(payload);
+        if (!additionalValidationResult.isValid) {
+            result.isValid = false;
+            additionalValidationResult.errors.forEach(x => {
+                result.errors.push(x);
+            })
+        }
+    }
+
     if (result.isValid) delete result.errors;
 
     return result;

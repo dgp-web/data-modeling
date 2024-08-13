@@ -1,5 +1,6 @@
 import { CommonType } from "./common-type.model";
 import { ExtendedTypeMap } from "./extended-type-map.model";
+import { ValidateAttribute } from "./validate-attribute.model";
 
 export interface AttributeMetadata<T = number, TScale = number> {
     readonly label?: string;
@@ -15,5 +16,6 @@ export interface AttributeMetadata<T = number, TScale = number> {
     readonly max?: TScale;
     readonly step?: TScale;
     readonly pattern?: RegExp;
+    readonly additionalValidation?: ValidateAttribute<T, TScale>;
 }
 

@@ -1,7 +1,7 @@
 import { createMissingAttributeValueError } from "../create-missing-attribute-value-error.function";
 import { createMinViolationError } from "../create-min-violation-error.function";
 import { createMaxViolationError } from "../create-max-violation-error.function";
-import { ModelValidationResult } from "../../../models";
+import { ModelValidationError, ModelValidationResult, ValidateAttribute } from "../../../models";
 import { validateAttribute } from "../validate-model.function";
 
 describe("validateAttribute", () => {
@@ -143,6 +143,37 @@ describe("validateAttribute", () => {
             modelType
         });
 
+        expect(result.isValid).toBeFalsy();
+        expect(result.errors).toContainEqual(expectedError);
+    });
+
+    it(`should consider additional validation.`, () => {
+        const arrayValue = ["one", "one"];
+        const expectedError: ModelValidationError = {
+            attributePath,
+            modelId,
+            modelType,
+            title: "Items not unique",
+            message: "All items must be unique, got: " + JSON.stringify(arrayValue)
+        };
+
+        const additionalValidation: ValidateAttribute<readonly string[]> = payload => {
+
+            if ((new Set(payload.value)).size !== payload.value.length) {
+                return {
+                    isValid: false,
+                    errors: [expectedError]
+                }
+            } else {
+                return {
+                    isValid: true
+                };
+            }
+        };
+
+        const result = validateAttribute({
+            value: arrayValue, attributePath, attributeMetadata: {additionalValidation}, modelId, modelType
+        });
         expect(result.isValid).toBeFalsy();
         expect(result.errors).toContainEqual(expectedError);
     });

@@ -17,4 +17,5 @@ export { ReadonlyDate } from "./readonly-date.model";
 export { CommonTypeMap } from "./common-type-map.model";
 export { CommonType } from "./common-type.model";
 export { CurrentSelection } from "./current-selection.model";
+export { ValidateAttribute } from "./validate-attribute.model";
 
