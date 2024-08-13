@@ -1,4 +1,5 @@
 import {ResolvedMetadata} from "./resolved-metadata.model";
+import { ValidateArray } from "./validate-array.model";
 
 export interface ArrayMetadata<TItem> {
     readonly description?: string;
@@ -11,4 +12,5 @@ export interface ArrayMetadata<TItem> {
     readonly min?: number;
     readonly isRequired?: boolean;
     readonly secret?: boolean;
+    readonly additionalValidation?: ValidateArray<Array<TItem>>;
 }

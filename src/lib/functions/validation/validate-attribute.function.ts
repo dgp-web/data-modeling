@@ -80,6 +80,7 @@ export function validateAttribute<TValue>(payload: {
             })
         }
     }
+
     if (result.isValid) delete result.errors;
 
     return result;

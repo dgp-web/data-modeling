@@ -3,7 +3,7 @@ import {createMaxViolationError} from "./create-max-violation-error.function";
 import {createMinViolationError} from "./create-min-violation-error.function";
 import {validateModel} from "./validate-model.function";
 import {validateAttribute} from "./validate-attribute.function";
-import {ArrayMetadata, ModelValidationResult} from "../../models";
+import { ArrayMetadata, AttributeMetadata, ModelMetadata, ModelValidationResult } from "../../models";
 import {isNullOrUndefined} from "./is-null-or-undefined.function";
 import {notNullOrUndefined} from "./not-null-or-undefined.function";
 import {createEmptyModelValidationResult} from "./create-empty-model-validation-result.function";
@@ -65,21 +65,21 @@ export function validateArray<TArray extends any[]>(
                 r = config.validateArray({
                     array: item,
                     attributePath: childAttributePath,
-                    arrayMetadata: metadata.item,
+                    arrayMetadata: metadata.item as ArrayMetadata<any>,
                     modelId, modelType
                 }, config);
             } else if (typeof item === "object") {
                 r = config.validateModel({
                     model: item,
                     attributePath: childAttributePath,
-                    modelMetadata: metadata.item,
+                    modelMetadata: metadata.item as ModelMetadata<any>,
                     modelId, modelType
                 }, config);
             } else {
                 r = config.validateAttribute({
                     value: item,
                     attributePath: childAttributePath,
-                    attributeMetadata: metadata.item,
+                    attributeMetadata: metadata.item as AttributeMetadata,
                     modelId, modelType
                 });
             }
@@ -90,6 +90,16 @@ export function validateArray<TArray extends any[]>(
             }
         });
 
+    }
+
+    if (notNullOrUndefined(metadata.additionalValidation)) {
+        const additionalValidationResult = metadata.additionalValidation(payload);
+        if (!additionalValidationResult.isValid) {
+            result.isValid = false;
+            additionalValidationResult.errors.forEach(x => {
+                result.errors.push(x);
+            })
+        }
     }
 
     if (result.isValid) delete result.errors;
