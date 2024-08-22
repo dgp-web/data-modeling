@@ -1,0 +1,1 @@
+export const patternNotMatchedErrorTitle = "Pattern not matched";

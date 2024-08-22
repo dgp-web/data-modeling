@@ -1,4 +1,5 @@
-import {ModelValidationError} from "../../models";
+import { ModelValidationError } from "../../models";
+import { allowedMinViolatedErrorTitle } from "../../constants";
 
 export function createMinViolationError(payload: {
     readonly value: number;
@@ -14,8 +15,9 @@ export function createMinViolationError(payload: {
     const min = payload.min;
 
     return {
-        title: "Allowed minimum violated",
+        title: allowedMinViolatedErrorTitle,
         message: `The attribute '${attributePath}'s value or length of '${value}' is below the allowed minimum '${min}'.`,
         modelId, modelType, attributePath
     };
 }
+
