@@ -1,0 +1,1 @@
+export const implicitAdditionalAttributeErrorTitle = "Implicit additional attribute"

@@ -3,3 +3,4 @@ export * from "./create-min-violation-error.function";
 export * from "./create-missing-attribute-value-error.function";
 export * from "./validate-model.function";
 export { createUnexpectedValueTypeError } from "./create-unexpected-value-type-error.function";
+export { createImplicitAdditionalAttributeError } from "./create-implicit-additional-attribute-error.function";
