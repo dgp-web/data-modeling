@@ -1,6 +1,7 @@
-import {validateModel, validateModelConfig} from "../validate-model.function";
-import {createMissingAttributeValueError} from "../create-missing-attribute-value-error.function";
-import {ModelMetadata, ModelValidationResult} from "../../../models";
+import { createModelValidationConfig, validateModel, validateModelConfig } from "../validate-model.function";
+import { createMissingAttributeValueError } from "../create-missing-attribute-value-error.function";
+import { ModelMetadata, ModelValidationResult } from "../../../models";
+import { createImplicitAdditionalAttributeError } from "../create-implicit-additional-attribute-error.function";
 
 describe("validateModel", () => {
 
@@ -88,5 +89,27 @@ describe("validateModel", () => {
             attributeMetadata: modelMetadata.attributes.label, modelId, modelType
         });
     });
+
+
+    it(`should return an error if 'allowOnlyAttributesWithMetadata' is set and not all attributes have metadata`, () => {
+        const model = {label: "", age: 1};
+        const result = validateModel(
+            {
+                model, attributePath, modelMetadata: {
+                    attributes: {
+                        age: {}
+                    }
+                }, modelId, modelType
+            },
+            createModelValidationConfig({allowOnlyAttributesWithMetadata: true})
+        );
+        expect(result.isValid).toBeFalsy();
+        expect(result.errors).toContainEqual(createImplicitAdditionalAttributeError({
+            attributeKey: "label",
+            allowedAttributeKeys: ["age"],
+            attributePath, modelId, modelType
+        }));
+    });
+
 
 });

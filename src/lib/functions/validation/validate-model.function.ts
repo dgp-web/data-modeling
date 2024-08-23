@@ -3,6 +3,7 @@ import {
     ArrayMetadata,
     AttributeMetadata,
     ModelMetadata,
+    ModelValidationConfig,
     ModelValidationError,
     ModelValidationResult
 } from "../../models";
@@ -13,6 +14,7 @@ import { createMaxViolationError } from "./create-max-violation-error.function";
 import { createMinViolationError } from "./create-min-violation-error.function";
 import { patternNotMatchedErrorTitle } from "../../constants";
 import { createUnexpectedValueTypeError } from "./create-unexpected-value-type-error.function";
+import { createImplicitAdditionalAttributeError } from "./create-implicit-additional-attribute-error.function";
 
 export function validateAttribute<TValue>(payload: {
     readonly value: TValue;
@@ -144,6 +146,19 @@ export const validateModelConfig = {
     validateAttribute
 };
 
+export function createModelValidationConfig(payload: ModelValidationConfig) {
+    return {
+        ...payload,
+        ...validateModelConfig
+    };
+}
+
+interface ValidateModelConfig extends ModelValidationConfig {
+    validateArray: typeof validateModelConfig.validateArray;
+    validateModel: typeof validateModelConfig.validateModel;
+    validateAttribute: typeof validateModelConfig.validateAttribute;
+}
+
 export function validateModel<TModel>(
     payload: {
         readonly model: TModel;
@@ -152,7 +167,7 @@ export function validateModel<TModel>(
         readonly modelId: string;
         readonly modelType: string;
     },
-    config = validateModelConfig
+    config: ValidateModelConfig = validateModelConfig
 ): ModelValidationResult {
 
     const model = payload.model;
@@ -217,6 +232,21 @@ export function validateModel<TModel>(
 
     });
 
+    if (config.allowOnlyAttributesWithMetadata) {
+        const allowedAttributeKeys = Object.keys(metadata.attributes);
+
+        Object.keys(model).forEach(attributeKey => {
+            if (!allowedAttributeKeys.includes(attributeKey)) {
+                result.isValid = false;
+                result.errors.push(createImplicitAdditionalAttributeError({
+                    attributeKey,
+                    allowedAttributeKeys,
+                    attributePath: rootAttributePath, modelId, modelType
+                }))
+            }
+        });
+    }
+
     if (result.isValid) delete result.errors;
 
     return result;
@@ -228,6 +258,12 @@ export const validateArrayConfig = {
     validateAttribute
 };
 
+interface ValidateArrayConfig extends ModelValidationConfig {
+    validateArray: typeof validateArrayConfig.validateArray;
+    validateModel: typeof validateArrayConfig.validateModel;
+    validateAttribute: typeof validateArrayConfig.validateAttribute;
+}
+
 export function validateArray<TArray extends any[]>(
     payload: {
         readonly array: TArray;
@@ -236,7 +272,7 @@ export function validateArray<TArray extends any[]>(
         readonly modelId: string;
         readonly modelType: string;
     },
-    config = validateArrayConfig
+    config: ValidateArrayConfig = validateArrayConfig
 ): ModelValidationResult {
 
     const value = payload.array;
