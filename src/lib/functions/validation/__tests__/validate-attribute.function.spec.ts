@@ -3,6 +3,7 @@ import { createMinViolationError } from "../create-min-violation-error.function"
 import { createMaxViolationError } from "../create-max-violation-error.function";
 import { ModelValidationError, ModelValidationResult, ValidateAttribute } from "../../../models";
 import { validateAttribute } from "../validate-model.function";
+import { createUnexpectedValueTypeError } from "../create-unexpected-value-type-error.function";
 
 describe("validateAttribute", () => {
 
@@ -139,6 +140,82 @@ describe("validateAttribute", () => {
             value: arrayValue.length,
             attributePath,
             max,
+            modelId,
+            modelType
+        });
+
+        expect(result.isValid).toBeFalsy();
+        expect(result.errors).toContainEqual(expectedError);
+    });
+
+    it(`should return an error if an attribute's expected type is "string" but the actual type is not.`, () => {
+        const value = 1;
+
+        const result = validateAttribute({
+            value: value, attributePath, attributeMetadata: {type: "string"}, modelId, modelType
+        });
+
+        const expectedError = createUnexpectedValueTypeError({
+            actualType: typeof value,
+            attributePath,
+            expectedType: "string",
+            modelId,
+            modelType
+        });
+
+        expect(result.isValid).toBeFalsy();
+        expect(result.errors).toContainEqual(expectedError);
+    });
+
+    it(`should return an error if an attribute's expected type is "number" but the actual type is not.`, () => {
+        const value = "";
+
+        const result = validateAttribute({
+            value: value, attributePath, attributeMetadata: {type: "number"}, modelId, modelType
+        });
+
+        const expectedError = createUnexpectedValueTypeError({
+            actualType: typeof value,
+            attributePath,
+            expectedType: "number",
+            modelId,
+            modelType
+        });
+
+        expect(result.isValid).toBeFalsy();
+        expect(result.errors).toContainEqual(expectedError);
+    });
+
+    it(`should return an error if an attribute's expected type is "integer" but the actual type is not.`, () => {
+        const value = 1.1;
+
+        const result = validateAttribute({
+            value: value, attributePath, attributeMetadata: {type: "integer"}, modelId, modelType
+        });
+
+        const expectedError = createUnexpectedValueTypeError({
+            actualType: typeof value,
+            attributePath,
+            expectedType: "integer",
+            modelId,
+            modelType
+        });
+
+        expect(result.isValid).toBeFalsy();
+        expect(result.errors).toContainEqual(expectedError);
+    });
+
+    it(`should return an error if an attribute's expected type is "boolean" but the actual type is not.`, () => {
+        const value = 1;
+
+        const result = validateAttribute({
+            value: value, attributePath, attributeMetadata: {type: "boolean"}, modelId, modelType
+        });
+
+        const expectedError = createUnexpectedValueTypeError({
+            actualType: typeof value,
+            attributePath,
+            expectedType: "boolean",
             modelId,
             modelType
         });

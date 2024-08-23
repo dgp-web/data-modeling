@@ -75,6 +75,45 @@ export function validateAttribute<TValue>(payload: {
         }
     }
 
+    if (metadata.type === "number" && notNullOrUndefined(value)) {
+        if (typeof value !== "number") {
+            result.isValid = false;
+            result.errors.push(createUnexpectedValueTypeError({
+                actualType: typeof value,
+                expectedType: metadata.type,
+                attributePath,
+                modelId,
+                modelType
+            }))
+        }
+    }
+
+    if (metadata.type === "integer" && notNullOrUndefined(value)) {
+        if (!Number.isInteger(value)) {
+            result.isValid = false;
+            result.errors.push(createUnexpectedValueTypeError({
+                actualType: typeof value,
+                expectedType: metadata.type,
+                attributePath,
+                modelId,
+                modelType
+            }))
+        }
+    }
+
+    if (metadata.type === "boolean" && notNullOrUndefined(value)) {
+        if (typeof value !== "boolean") {
+            result.isValid = false;
+            result.errors.push(createUnexpectedValueTypeError({
+                actualType: typeof value,
+                expectedType: metadata.type,
+                attributePath,
+                modelId,
+                modelType
+            }))
+        }
+    }
+
     if (typeof value === "string") {
         if (notNullOrUndefined(metadata.pattern)) {
             const matchesPattern = metadata.pattern.test(value);

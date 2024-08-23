@@ -1,9 +1,9 @@
-import { CommonType, ExtendedTypeMap, ModelValidationError } from "../../models";
+import { CommonType, ExtendedType, ModelValidationError } from "../../models";
 import { unexpectedValueTypeErrorTitle } from "../../constants";
 
 export function createUnexpectedValueTypeError(payload: {
     readonly actualType: string;
-    readonly expectedType: CommonType | ExtendedTypeMap;
+    readonly expectedType: CommonType | ExtendedType;
     readonly modelId: string;
     readonly modelType: string;
     readonly attributePath: string
