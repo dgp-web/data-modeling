@@ -12,6 +12,7 @@ import { notNullOrUndefined } from "./not-null-or-undefined.function";
 import { createMaxViolationError } from "./create-max-violation-error.function";
 import { createMinViolationError } from "./create-min-violation-error.function";
 import { patternNotMatchedErrorTitle } from "../../constants";
+import { createUnexpectedValueTypeError } from "./create-unexpected-value-type-error.function";
 
 export function validateAttribute<TValue>(payload: {
     readonly value: TValue;
@@ -59,6 +60,19 @@ export function validateAttribute<TValue>(payload: {
             }));
         }
 
+    }
+
+    if (metadata.type === "string" && notNullOrUndefined(value)) {
+        if (typeof value !== "string") {
+            result.isValid = false;
+            result.errors.push(createUnexpectedValueTypeError({
+                actualType: typeof value,
+                expectedType: metadata.type,
+                attributePath,
+                modelId,
+                modelType
+            }))
+        }
     }
 
     if (typeof value === "string") {
