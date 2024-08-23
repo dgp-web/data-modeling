@@ -62,56 +62,49 @@ export function validateAttribute<TValue>(payload: {
 
     }
 
-    if (metadata.type === "string" && notNullOrUndefined(value)) {
-        if (typeof value !== "string") {
-            result.isValid = false;
-            result.errors.push(createUnexpectedValueTypeError({
-                actualType: typeof value,
-                expectedType: metadata.type,
-                attributePath,
-                modelId,
-                modelType
-            }))
-        }
-    }
+    if (notNullOrUndefined(value)) {
 
-    if (metadata.type === "number" && notNullOrUndefined(value)) {
-        if (typeof value !== "number") {
-            result.isValid = false;
-            result.errors.push(createUnexpectedValueTypeError({
-                actualType: typeof value,
-                expectedType: metadata.type,
-                attributePath,
-                modelId,
-                modelType
-            }))
+        switch (metadata.type) {
+            case "string":
+            case "number":
+            case "boolean":
+                if (typeof value !== metadata.type) {
+                    result.isValid = false;
+                    result.errors.push(createUnexpectedValueTypeError({
+                        actualType: typeof value,
+                        expectedType: metadata.type,
+                        attributePath,
+                        modelId,
+                        modelType
+                    }))
+                }
+                break;
+            case "integer":
+                if (!Number.isInteger(value)) {
+                    result.isValid = false;
+                    result.errors.push(createUnexpectedValueTypeError({
+                        actualType: typeof value,
+                        expectedType: metadata.type,
+                        attributePath,
+                        modelId,
+                        modelType
+                    }))
+                }
+                break;
+            case "date":
+                if (!(value instanceof Date)) {
+                    result.isValid = false;
+                    result.errors.push(createUnexpectedValueTypeError({
+                        actualType: typeof value,
+                        expectedType: metadata.type,
+                        attributePath,
+                        modelId,
+                        modelType
+                    }))
+                }
+                break;
         }
-    }
 
-    if (metadata.type === "integer" && notNullOrUndefined(value)) {
-        if (!Number.isInteger(value)) {
-            result.isValid = false;
-            result.errors.push(createUnexpectedValueTypeError({
-                actualType: typeof value,
-                expectedType: metadata.type,
-                attributePath,
-                modelId,
-                modelType
-            }))
-        }
-    }
-
-    if (metadata.type === "boolean" && notNullOrUndefined(value)) {
-        if (typeof value !== "boolean") {
-            result.isValid = false;
-            result.errors.push(createUnexpectedValueTypeError({
-                actualType: typeof value,
-                expectedType: metadata.type,
-                attributePath,
-                modelId,
-                modelType
-            }))
-        }
     }
 
     if (typeof value === "string") {

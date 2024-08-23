@@ -224,6 +224,25 @@ describe("validateAttribute", () => {
         expect(result.errors).toContainEqual(expectedError);
     });
 
+    it(`should return an error if an attribute's expected type is "date" but the actual type is not.`, () => {
+        const value = 1;
+
+        const result = validateAttribute({
+            value: value, attributePath, attributeMetadata: {type: "date"}, modelId, modelType
+        });
+
+        const expectedError = createUnexpectedValueTypeError({
+            actualType: typeof value,
+            attributePath,
+            expectedType: "date",
+            modelId,
+            modelType
+        });
+
+        expect(result.isValid).toBeFalsy();
+        expect(result.errors).toContainEqual(expectedError);
+    });
+
     it(`should consider additional validation.`, () => {
         const arrayValue = ["one", "one"];
         const expectedError: ModelValidationError = {
