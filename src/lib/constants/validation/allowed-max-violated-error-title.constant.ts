@@ -1,0 +1,1 @@
+export const allowedMaxViolatedErrorTitle = "Allowed maximum violated";

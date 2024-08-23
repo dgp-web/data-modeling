@@ -1,0 +1,1 @@
+export const allowedMinViolatedErrorTitle = "Allowed minimum violated";

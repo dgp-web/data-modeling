@@ -1,11 +1,18 @@
 import { createMissingAttributeValueError } from "./create-missing-attribute-value-error.function";
-import { ArrayMetadata, AttributeMetadata, ModelMetadata, ModelValidationResult } from "../../models";
+import {
+    ArrayMetadata,
+    AttributeMetadata,
+    ModelMetadata,
+    ModelValidationError,
+    ModelValidationResult
+} from "../../models";
 import { isNullOrUndefined } from "./is-null-or-undefined.function";
 import { createEmptyModelValidationResult } from "./create-empty-model-validation-result.function";
 import { notNullOrUndefined } from "./not-null-or-undefined.function";
 import { createMaxViolationError } from "./create-max-violation-error.function";
 import { createMinViolationError } from "./create-min-violation-error.function";
-import { createPatternNotMatchedError } from "./validate-attribute.function";
+import { patternNotMatchedErrorTitle } from "../../constants";
+import { createUnexpectedValueTypeError } from "./create-unexpected-value-type-error.function";
 
 export function validateAttribute<TValue>(payload: {
     readonly value: TValue;
@@ -51,6 +58,51 @@ export function validateAttribute<TValue>(payload: {
             result.errors.push(createMinViolationError({
                 value: resolvedValue, min: metadata.min, attributePath, modelId, modelType
             }));
+        }
+
+    }
+
+    if (notNullOrUndefined(value)) {
+
+        switch (metadata.type) {
+            case "string":
+            case "number":
+            case "boolean":
+                if (typeof value !== metadata.type) {
+                    result.isValid = false;
+                    result.errors.push(createUnexpectedValueTypeError({
+                        actualType: typeof value,
+                        expectedType: metadata.type,
+                        attributePath,
+                        modelId,
+                        modelType
+                    }))
+                }
+                break;
+            case "integer":
+                if (!Number.isInteger(value)) {
+                    result.isValid = false;
+                    result.errors.push(createUnexpectedValueTypeError({
+                        actualType: typeof value,
+                        expectedType: metadata.type,
+                        attributePath,
+                        modelId,
+                        modelType
+                    }))
+                }
+                break;
+            case "date":
+                if (!(value instanceof Date)) {
+                    result.isValid = false;
+                    result.errors.push(createUnexpectedValueTypeError({
+                        actualType: typeof value,
+                        expectedType: metadata.type,
+                        attributePath,
+                        modelId,
+                        modelType
+                    }))
+                }
+                break;
         }
 
     }
@@ -269,3 +321,25 @@ export function validateArray<TArray extends any[]>(
     return result;
 
 }
+
+export function createPatternNotMatchedError(payload: {
+    readonly value: string;
+    readonly pattern: RegExp;
+    readonly attributePath: string;
+    readonly modelId: string;
+    readonly modelType: string;
+}): ModelValidationError {
+    const value = payload.value;
+    const pattern = payload.pattern;
+
+    const message = "Value " + value + " doesn't match pattern: /" + pattern.source + "/";
+
+    return {
+        title: patternNotMatchedErrorTitle,
+        message,
+        attributePath: payload.attributePath,
+        modelId: payload.modelId,
+        modelType: payload.modelType
+    };
+}
+

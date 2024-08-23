@@ -1,4 +1,5 @@
-import {ModelValidationError} from "../../models";
+import { ModelValidationError } from "../../models";
+import { allowedMaxViolatedErrorTitle } from "../../constants";
 
 export function createMaxViolationError(payload: {
     readonly value: number;
@@ -14,8 +15,9 @@ export function createMaxViolationError(payload: {
     const max = payload.max;
 
     return {
-        title: "Allowed maximum violated",
+        title: allowedMaxViolatedErrorTitle,
         message: `The attribute '${attributePath}'s value or length of '${value}' is above the allowed maximum '${max}'.`,
         modelId, modelType, attributePath
     };
 }
+

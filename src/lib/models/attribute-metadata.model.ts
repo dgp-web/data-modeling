@@ -1,5 +1,5 @@
 import { CommonType } from "./common-type.model";
-import { ExtendedTypeMap } from "./extended-type-map.model";
+import { ExtendedType } from "./extended-type-map.model";
 import { ValidateAttribute } from "./validate-attribute.model";
 
 export interface AttributeMetadata<T = number, TScale = number> {
@@ -10,7 +10,7 @@ export interface AttributeMetadata<T = number, TScale = number> {
     readonly icon?: string;
     readonly isSecret?: boolean;
     readonly isRequired?: boolean;
-    readonly type?: CommonType | ExtendedTypeMap;
+    readonly type?: CommonType | ExtendedType;
     readonly defaultValue?: T;
     readonly min?: TScale;
     readonly max?: TScale;
