@@ -70,12 +70,12 @@ export function deleteMaskedSecretAttributesFromArray<TArray extends any[]>(
         if (Array.isArray(item)) {
             return config.deleteMaskedSecretAttributesFromArray({
                 array: item,
-                arrayMetadata: metadata.item
+                arrayMetadata: metadata.item as ArrayMetadata<any>
             }, config);
         } else if (typeof item === "object") {
             return config.deleteMaskedSecretAttributes({
                 model: item,
-                modelMetadata: metadata.item
+                modelMetadata: metadata.item as ModelMetadata<any>
             }, config);
         } else {
             return item

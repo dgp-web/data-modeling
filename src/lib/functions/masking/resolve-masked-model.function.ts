@@ -105,19 +105,19 @@ export function resolveMaskedArray<TArray extends any[]>(
             return config.resolveMaskedArray({
                 array: item,
                 referenceArray: referenceArray[index],
-                arrayMetadata: arrayMetadata.item
+                arrayMetadata: arrayMetadata.item as ArrayMetadata<any>
             }, config);
         } else if (typeof item === "object") {
             return config.resolveMaskedModel({
                 model: item,
                 referenceModel: referenceArray[index],
-                modelMetadata: arrayMetadata.item
+                modelMetadata: arrayMetadata.item as ModelMetadata<any>
             }, config);
         } else {
             return config.resolveMaskedAttribute({
                 value: item,
                 referenceValue: referenceArray[index],
-                attributeMetadata: arrayMetadata.item
+                attributeMetadata: arrayMetadata.item as AttributeMetadata<any>
             });
         }
     }) as TArray;

@@ -88,17 +88,17 @@ export function maskArray<TArray extends any[]>(
         if (Array.isArray(item)) {
             return config.maskArray({
                 array: item,
-                arrayMetadata: metadata.item
+                arrayMetadata: metadata.item as ArrayMetadata<any>
             }, config);
         } else if (typeof item === "object") {
             return config.maskModel({
                 model: item,
-                modelMetadata: metadata.item
+                modelMetadata: metadata.item as ModelMetadata<any>
             }, config);
         } else {
             return config.maskAttribute({
                 value: item,
-                attributeMetadata: metadata.item
+                attributeMetadata: metadata.item as AttributeMetadata
             });
         }
     }) as TArray;
